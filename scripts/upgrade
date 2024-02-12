@@ -94,6 +94,7 @@ pushd "$install_dir"
 	export PATH="$install_dir/.cargo/bin:$PATH"
 	ynh_use_nodejs
 	git init
+	git config --global --add safe.directory $install_dir
 	git add .
 	git remote add origin https://firefish.dev/firefish/firefish.git
 	git checkout -- packages/backend/assets
