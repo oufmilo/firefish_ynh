@@ -99,12 +99,15 @@ pushd "$install_dir"
 	git fetch origin 
 	git checkout -f main
 	git pull -ff
+	rm --recursive --force packages/backend/native-utils
 	chown -R $app:www-data "$install_dir"
 	#Build pnpm + update rustup
 	curl https://sh.rustup.rs -sSf | ynh_exec_warn_less ynh_exec_as $app sh -s -- -y
 	export PATH="$install_dir/.cargo/bin:$PATH"
+	rustup update
 	ynh_use_nodejs
 	corepack prepare pnpm@latest --activate
+	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm clean-npm
     ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm install --frozen-lockfile --force
     ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH NODE_ENV=production NODE_OPTIONS='--max_old_space_size=3072' pnpm run rebuild
     ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm run migrate
