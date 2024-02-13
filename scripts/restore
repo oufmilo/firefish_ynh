@@ -21,6 +21,9 @@ ynh_script_progression --message="Restoring the app main directory..." --weight=
 
 ynh_restore_file --origin_path="$install_dir"
 
+chmod -R o-rwx "$install_dir"
+chown -R $app:www-data "$install_dir"
+
 #=================================================
 # SPECIFIC RESTORATION
 #=================================================
@@ -43,8 +46,8 @@ pushd "$install_dir"
 	ynh_use_nodejs
 	corepack enable
 	corepack prepare pnpm@latest --activate
-	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm install
-	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH NODE_ENV=production pnpm build
+	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm install --frozen-lockfile
+	ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH NODE_ENV='production' NODE_OPTIONS='--max_old_space_size=3072' pnpm run build
 popd
 
 #=================================================
