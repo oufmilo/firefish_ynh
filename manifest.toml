@@ -5,7 +5,7 @@ name = "Firefish"
 description.en = "Fork of Misskey with better UI/UX, security, features"
 description.fr = "Un fork de Misskey avec une meilleure interface utilisateur, la sécurité, les fonctionnalités"
 
-version = "1.0.5rc~ynh1"
+version = "20240213~ynh1"
 
 maintainers = ["oufmilo"]
 
@@ -38,10 +38,6 @@ ram.runtime = "2G"
 
 [resources]
 
-    [resources.sources.main]
-    url = "https://git.joinfirefish.org/firefish/firefish/-/archive/v1.0.5-rc/firefish-v1.0.5-rc.tar.gz"
-    sha256 = "b9b59899eaddcdd94e10974e34af083bd9a9c6228046dc4d4af0f3a669ccb7ef"
-
     [resources.system_user]
 
     [resources.install_dir]
@@ -53,7 +49,7 @@ ram.runtime = "2G"
     main.default = 3020
 
     [resources.apt]
-    packages = "ffmpeg, postgresql, build-essential"
+    packages = "ffmpeg, postgresql, build-essential, git"
 
     [resources.database]
     type = "postgresql"

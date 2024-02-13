@@ -61,8 +61,11 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
 	ynh_script_progression --message="Upgrading source files..."
 
-	# Download, check integrity, uncompress and patch the source from app.src
-	ynh_setup_source --dest_dir="$install_dir" --keep=".config/default.yml"
+	pushd $install_dir
+		chown -R $app:www-data "$install_dir"
+		ynh_exec_warn_less ynh_exec_as $app git checkout main
+		ynh_exec_warn_less ynh_exec_as $app git pull --ff
+	popd
 fi
 
 chmod 750 "$install_dir"
@@ -93,9 +96,9 @@ pushd "$install_dir"
 	curl https://sh.rustup.rs -sSf | ynh_exec_warn_less ynh_exec_as $app sh -s -- -y
 	export PATH="$install_dir/.cargo/bin:$PATH"
 	ynh_use_nodejs
-    corepack enable
     corepack prepare pnpm@latest --activate
-    ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm install
+    ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm cleanall
+    ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm install --frozen-lockfile
     ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH NODE_ENV=production pnpm run build
     ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm run migrate
 popd
