@@ -90,8 +90,7 @@ ynh_add_nginx_config
 ynh_script_progression --message="Building app..."
 
 pushd "$install_dir"
-	curl https://sh.rustup.rs -sSf | ynh_exec_warn_less ynh_exec_as $app sh -s -- -y
-	export PATH="$install_dir/.cargo/bin:$PATH"
+	#Add git repository
 	git init
 	git add .
 	git config --system --add safe.directory $install_dir
@@ -99,9 +98,11 @@ pushd "$install_dir"
 	git checkout -- packages/backend/assets
 	git fetch origin 
 	git checkout -f main
-	git switch main
 	git pull -ff
 	chown -R $app:www-data "$install_dir"
+	#Build pnpm + update rustup
+	curl https://sh.rustup.rs -sSf | ynh_exec_warn_less ynh_exec_as $app sh -s -- -y
+	export PATH="$install_dir/.cargo/bin:$PATH"
 	ynh_use_nodejs
 	corepack prepare pnpm@latest --activate
     ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm install --frozen-lockfile --force
