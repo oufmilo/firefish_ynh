@@ -101,6 +101,7 @@ pushd "$install_dir"
 	git checkout -f main
 	git switch main
 	git pull -ff
+	chown -R $app:www-data "$install_dir"
 	ynh_use_nodejs
 	corepack prepare pnpm@latest --activate
     ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm install --frozen-lockfile --force
