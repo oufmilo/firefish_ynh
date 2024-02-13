@@ -105,12 +105,11 @@ pushd "$install_dir"
 	#Build pnpm + update rustup
 	curl https://sh.rustup.rs -sSf | ynh_exec_warn_less ynh_exec_as $app sh -s -- -y
 	export PATH="$install_dir/.cargo/bin:$PATH"
-	ynh_use_nodejs
 	corepack prepare pnpm@latest --activate
-    ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm install --frozen-lockfile --force
-    ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm run clean-cargo
-    ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH NODE_ENV=production NODE_OPTIONS='--max_old_space_size=3072' pnpm run build
-    ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm run migrate
+	pnpm install --frozen-lockfile --force
+    pnpm run clean-cargo
+    NODE_OPTIONS='--max_old_space_size=3072' pnpm run rebuild
+    pnpm run migrate
 popd
 
 chown -R $app:www-data "$install_dir"
