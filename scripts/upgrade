@@ -92,9 +92,8 @@ ynh_script_progression --message="Building app..."
 pushd "$install_dir"
 	curl https://sh.rustup.rs -sSf | ynh_exec_warn_less ynh_exec_as $app sh -s -- -y
 	export PATH="$install_dir/.cargo/bin:$PATH"
-	ynh_use_nodejs
+	git config --global --add safe.directory $install_dir
 	git init
-	git config --global --add safe.directory /var/www/firefish
 	git add .
 	git remote add origin https://firefish.dev/firefish/firefish.git
 	git checkout -- packages/backend/assets
@@ -102,6 +101,7 @@ pushd "$install_dir"
 	git checkout -f main
 	git switch main
 	git pull -ff
+	ynh_use_nodejs
 	corepack prepare pnpm@latest --activate
     ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH pnpm install --frozen-lockfile --force
     ynh_exec_warn_less ynh_exec_as $app env $ynh_node_load_PATH NODE_ENV=production NODE_OPTIONS='--max_old_space_size=3072' pnpm run rebuild
