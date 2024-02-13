@@ -92,10 +92,9 @@ ynh_script_progression --message="Building app..."
 pushd "$install_dir"
 	curl https://sh.rustup.rs -sSf | ynh_exec_warn_less ynh_exec_as $app sh -s -- -y
 	export PATH="$install_dir/.cargo/bin:$PATH"
-	export HOME="$install_dir:$HOME"
-	git config --global --add safe.directory $install_dir
 	git init
 	git add .
+	git config --global --add safe.directory $install_dir
 	git remote add origin https://firefish.dev/firefish/firefish.git
 	git checkout -- packages/backend/assets
 	git fetch origin 
